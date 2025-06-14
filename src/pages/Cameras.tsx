@@ -1,7 +1,10 @@
 
+import ProjectContextBar from "@/components/ProjectContextBar";
+
 const Cameras = () => (
   <div className="p-8">
     <h1 className="text-3xl font-bold mb-4">Cameras</h1>
+    <ProjectContextBar projectName="Wolf Camera Survey" />
     <p className="text-muted-foreground">
       Manage trail cameras. CAMTRAP-DP: Define devices and their details.
     </p>

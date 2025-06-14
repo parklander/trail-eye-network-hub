@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Map from "@/components/Map";
 import { DeploymentForm } from "@/components/DeploymentForm";
+import ProjectContextBar from "@/components/ProjectContextBar";
 
 const Deployments = () => {
   const [showForm, setShowForm] = useState(false);
@@ -14,6 +15,7 @@ const Deployments = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <div>
           <h1 className="text-3xl font-bold mb-1">Deployments</h1>
+          <ProjectContextBar projectName="Wolf Camera Survey" />
           <p className="text-muted-foreground">
             Track camera deployments in the field. CAMTRAP-DP: Location, time, and deployment metadata.
           </p>
