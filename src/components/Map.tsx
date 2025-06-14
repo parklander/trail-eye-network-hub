@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -16,7 +17,7 @@ const Map: React.FC<{ accessToken: string }> = ({ accessToken }) => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/light-v11",
-      projection: "globe",
+      projection: "mercator",
       zoom: 9,
       center: DEFAULT_CENTER,
       pitch: 45,
