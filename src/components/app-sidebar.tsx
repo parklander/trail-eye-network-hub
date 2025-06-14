@@ -13,7 +13,8 @@ const items = [
   { title: "Cameras", url: "/cameras", icon: Camera },
   { title: "Deployments", url: "/deployments", icon: ListChecks },
   { title: "Media", url: "/media", icon: Image },
-  { title: "Analysis", url: "/analysis", icon: ActivitySquare }
+  { title: "Analysis", url: "/analysis", icon: ActivitySquare },
+  { title: "Observations", url: "/observations", icon: ListChecks }, // ListChecks reused for now
 ];
 
 // Function to determine if the menu item is active

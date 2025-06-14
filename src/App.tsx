@@ -12,6 +12,7 @@ import Media from "./pages/Media";
 import Analysis from "./pages/Analysis";
 import NotFound from "./pages/NotFound";
 import Projects from "./pages/Projects";
+import React from "react";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
                 <Route path="/deployments" element={<Deployments />} />
                 <Route path="/media" element={<Media />} />
                 <Route path="/analysis" element={<Analysis />} />
+                <Route path="/observations" element={React.createElement(require("./pages/Observations").default)} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
