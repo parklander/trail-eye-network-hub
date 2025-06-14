@@ -21,11 +21,11 @@ const App = () => (
       <Toaster />
       <Sonner />
       <SidebarProvider>
-        <div className="min-h-screen flex w-full">
-          <AppSidebar />
-          <main className="flex-1 min-h-screen">
-            <SidebarTrigger />
-            <BrowserRouter>
+        <BrowserRouter>
+          <div className="min-h-screen flex w-full">
+            <AppSidebar />
+            <main className="flex-1 min-h-screen">
+              <SidebarTrigger />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/cameras" element={<Cameras />} />
@@ -35,9 +35,9 @@ const App = () => (
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </BrowserRouter>
-          </main>
-        </div>
+            </main>
+          </div>
+        </BrowserRouter>
       </SidebarProvider>
     </TooltipProvider>
   </QueryClientProvider>
