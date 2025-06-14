@@ -18,7 +18,7 @@ const Map: React.FC<{ accessToken: string }> = ({ accessToken }) => {
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/light-v11",
       projection: "globe",
-      zoom: 2,
+      zoom: 11,
       center: DEFAULT_CENTER,
       pitch: 45,
     });
@@ -52,4 +52,3 @@ const Map: React.FC<{ accessToken: string }> = ({ accessToken }) => {
 };
 
 export default Map;
-
