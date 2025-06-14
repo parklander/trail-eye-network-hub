@@ -1,15 +1,141 @@
 
+import React from "react";
 import ProjectContextBar from "@/components/ProjectContextBar";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableCaption,
+} from "@/components/ui/table";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
+// Mock data representing camera trap observations
+const mockCameraObservations = [
+  {
+    camera: "Camera A",
+    species: [
+      { name: "Gray Wolf", count: 5 },
+      { name: "Moose", count: 2 },
+      { name: "Raccoon", count: 1 },
+    ],
+  },
+  {
+    camera: "Camera B",
+    species: [
+      { name: "Gray Wolf", count: 3 },
+      { name: "Red Fox", count: 4 },
+    ],
+  },
+  {
+    camera: "Camera C",
+    species: [
+      { name: "Gray Wolf", count: 7 },
+      { name: "Moose", count: 1 },
+      { name: "Bald Eagle", count: 2 },
+    ],
+  },
+];
+
+// Summarize patterns in species observation
+function summarizePatterns(observations: typeof mockCameraObservations) {
+  const totalBySpecies: Record<string, number> = {};
+  observations.forEach((obs) => {
+    obs.species.forEach((sp) => {
+      totalBySpecies[sp.name] = (totalBySpecies[sp.name] || 0) + sp.count;
+    });
+  });
+
+  // Simple example: find most frequent species across all cameras
+  const sortedSpecies = Object.entries(totalBySpecies).sort(
+    (a, b) => b[1] - a[1]
+  );
+  const mostFrequentSpecies =
+    sortedSpecies.length > 0 ? sortedSpecies[0][0] : null;
+
+  const wolfCameraCounts = observations.map(
+    (c) => ({
+      camera: c.camera,
+      wolves: c.species.find((s) => s.name === "Gray Wolf")?.count || 0,
+    })
+  );
+  const camerasWithMostWolves = wolfCameraCounts
+    .sort((a, b) => b.wolves - a.wolves)
+    .slice(0, 1)
+    .map((c) => c.camera);
+
+  return {
+    mostFrequentSpecies,
+    camerasWithMostWolves,
+  };
+}
+
+const patternSummary = summarizePatterns(mockCameraObservations);
 
 const Analysis = () => (
   <div className="p-8">
     <h1 className="text-3xl font-bold mb-4">Analysis</h1>
     <ProjectContextBar projectName="Wolf Camera Survey" />
-    <p className="text-muted-foreground">
+    <p className="text-muted-foreground mb-6">
       Analyze media - manual or automated. CAMTRAP-DP: Platform for analysis of collected data.
     </p>
-    {/* Future: Integrate AI, manual review, export results */}
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle>Species Observations per Camera</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableCaption>A summary of species observed at each camera location.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Camera</TableHead>
+              <TableHead>Species</TableHead>
+              <TableHead>Observations</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {mockCameraObservations.map((camera) =>
+              camera.species.map((sp, i) => (
+                <TableRow key={camera.camera + sp.name}>
+                  {i === 0 ? (
+                    <TableCell rowSpan={camera.species.length} className="font-semibold">
+                      {camera.camera}
+                    </TableCell>
+                  ) : null}
+                  <TableCell>{sp.name}</TableCell>
+                  <TableCell>{sp.count}</TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle>Analysis Summary</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul className="list-disc ml-6">
+          <li>
+            <span className="font-medium">Most observed species:</span>{" "}
+            {patternSummary.mostFrequentSpecies}
+          </li>
+          <li>
+            <span className="font-medium">Camera with most wolf observations:</span>{" "}
+            {patternSummary.camerasWithMostWolves.join(", ")}
+          </li>
+          <li>
+            <span className="font-medium">Potential pattern:</span> Gray Wolves appear at all cameras, but are seen most frequently at{" "}
+            {patternSummary.camerasWithMostWolves.join(", ")}. Other species like Moose and Red Fox are seen less frequently and distribution varies by location.
+          </li>
+        </ul>
+      </CardContent>
+    </Card>
   </div>
 );
 
 export default Analysis;
+
