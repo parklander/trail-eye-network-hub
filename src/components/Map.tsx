@@ -88,10 +88,12 @@ const Map: React.FC<{ accessToken: string }> = ({ accessToken }) => {
         .addTo(map.current!);
 
       el.addEventListener("mouseenter", () => {
-        map.current?.getCanvas().style.cursor = "pointer";
+        const canvas = map.current && map.current.getCanvas();
+        if (canvas) canvas.style.cursor = "pointer";
       });
       el.addEventListener("mouseleave", () => {
-        map.current?.getCanvas().style.cursor = "";
+        const canvas = map.current && map.current.getCanvas();
+        if (canvas) canvas.style.cursor = "";
       });
       // Optionally, show a popup on click
       el.addEventListener("click", () => {
