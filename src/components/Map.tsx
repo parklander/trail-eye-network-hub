@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const DEFAULT_CENTER: [number, number] = [30, 15];
+const DEFAULT_CENTER: [number, number] = [0, 49];
 
 const Map: React.FC<{ accessToken: string }> = ({ accessToken }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
