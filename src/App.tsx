@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +11,7 @@ import Deployments from "./pages/Deployments";
 import Media from "./pages/Media";
 import Analysis from "./pages/Analysis";
 import NotFound from "./pages/NotFound";
+import Projects from "./pages/Projects";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +28,7 @@ const App = () => (
               <SidebarTrigger />
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/projects" element={<Projects />} />
                 <Route path="/cameras" element={<Cameras />} />
                 <Route path="/deployments" element={<Deployments />} />
                 <Route path="/media" element={<Media />} />
