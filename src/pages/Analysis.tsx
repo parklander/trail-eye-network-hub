@@ -1,3 +1,4 @@
+
 import React from "react";
 import ProjectContextBar from "@/components/ProjectContextBar";
 import {
@@ -51,7 +52,7 @@ function getTimePeriod(hour: number) {
   return "Night";
 }
 
-// Analyze time-of-day visitation patterns for each species
+// Analyze diurnal patterns
 function analyzeDiurnalPatterns(observations: typeof mockCameraObservations) {
   const speciesTimeCounts: Record<string, Record<string, number>> = {};
   observations.forEach((obs) => {
@@ -113,6 +114,55 @@ function summarizePatterns(observations: typeof mockCameraObservations) {
 const patternSummary = summarizePatterns(mockCameraObservations);
 const diurnalPatterns = analyzeDiurnalPatterns(mockCameraObservations);
 
+// New: flatten all camera/species/times/counts into rows for display
+type ObservationRow = {
+  camera: string;
+  species: string;
+  count: number;
+  time: string;
+};
+function getObservationRows(observations: typeof mockCameraObservations): ObservationRow[] {
+  const rows: ObservationRow[] = [];
+  for (const cam of observations) {
+    for (const sp of cam.species) {
+      if (sp.times && sp.times.length > 0) {
+        // If species lists more times than count, just map 1-1; if count > times, group multiple at a time
+        // Assumption: Each time corresponds to a count (seen N individuals at that time)
+        const timeCount = Math.min(sp.times.length, sp.count);
+        // Most common case: times.length === count
+        for (let i = 0; i < timeCount; i++) {
+          rows.push({
+            camera: cam.camera,
+            species: sp.name,
+            count: 1,
+            time: sp.times[i],
+          });
+        }
+        // If there are more counts than times, lump into the earliest time
+        if (sp.count > sp.times.length) {
+          rows.push({
+            camera: cam.camera,
+            species: sp.name,
+            count: sp.count - sp.times.length + 1,
+            time: sp.times[0],
+          });
+        }
+      } else {
+        // No times, just list count
+        rows.push({
+          camera: cam.camera,
+          species: sp.name,
+          count: sp.count,
+          time: "-",
+        });
+      }
+    }
+  }
+  return rows;
+}
+
+const observationRows = getObservationRows(mockCameraObservations);
+
 const Analysis = () => (
   <div className="p-8">
     <h1 className="text-3xl font-bold mb-4">Analysis</h1>
@@ -126,32 +176,26 @@ const Analysis = () => (
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>A summary of species observed at each camera location.</TableCaption>
+          <TableCaption>
+            A summary of individual species observations at each camera with count and time.
+          </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Camera</TableHead>
               <TableHead>Species</TableHead>
-              <TableHead>Observations</TableHead>
-              <TableHead>Times</TableHead>
+              <TableHead>Count</TableHead>
+              <TableHead>Time</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockCameraObservations.map((camera) =>
-              camera.species.map((sp, i) => (
-                <TableRow key={camera.camera + sp.name}>
-                  {i === 0 ? (
-                    <TableCell rowSpan={camera.species.length} className="font-semibold">
-                      {camera.camera}
-                    </TableCell>
-                  ) : null}
-                  <TableCell>{sp.name}</TableCell>
-                  <TableCell>{sp.count}</TableCell>
-                  <TableCell>
-                    {sp.times ? sp.times.join(", ") : "-"}
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+            {observationRows.map((row, idx) => (
+              <TableRow key={row.camera + row.species + row.time + idx}>
+                <TableCell>{row.camera}</TableCell>
+                <TableCell>{row.species}</TableCell>
+                <TableCell>{row.count}</TableCell>
+                <TableCell>{row.time !== "-" ? `${row.time}` : "-"}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>
