@@ -1,5 +1,5 @@
 
-import { Home, Camera, ListChecks, Image, ActivitySquare } from "lucide-react";
+import { Home, Camera, ListChecks, Image, ActivitySquare, FolderKanban } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem
@@ -7,6 +7,7 @@ import {
 
 const items = [
   { title: "Home", url: "/", icon: Home },
+  { title: "Projects", url: "/projects", icon: FolderKanban },
   { title: "Cameras", url: "/cameras", icon: Camera },
   { title: "Deployments", url: "/deployments", icon: ListChecks },
   { title: "Media", url: "/media", icon: Image },
@@ -38,3 +39,4 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
+
