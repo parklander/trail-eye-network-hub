@@ -1,3 +1,4 @@
+
 import { Home, Camera, ListChecks, Image, ActivitySquare, FolderKanban, Layers, BrainCircuit } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
@@ -5,34 +6,28 @@ import {
 } from "@/components/ui/sidebar";
 import { useLocation } from "react-router-dom";
 import React from "react";
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 
-const items = [
+// Default sidebar items
+const defaultItems = [
   { title: "Home", url: "/", icon: Home },
   { title: "Projects", url: "/projects", icon: FolderKanban },
   { title: "Cameras", url: "/cameras", icon: Camera },
   { title: "Deployments", url: "/deployments", icon: ListChecks },
   { title: "Media", url: "/media", icon: Image },
-  { title: "Observations", url: "/observations", icon: ListChecks }, // ListChecks reused for now
-  { title: "Analysis", url: "/analysis", icon: ActivitySquare }, // moved to bottom
+  { title: "Observations", url: "/observations", icon: ListChecks },
   { title: "Models", url: "/models", icon: Layers },
   { title: "Training", url: "/training", icon: BrainCircuit },
+  { title: "Analysis", url: "/analysis", icon: ActivitySquare }, // Analysis at bottom
 ];
 
-// Function to determine if the menu item is active
 function isActive(url: string, pathname: string) {
-  // Active for "Projects" is /projects or any subpage
-  if (url === "/projects" && pathname.startsWith("/projects")) {
-    return true;
-  }
+  if (url === "/projects" && pathname.startsWith("/projects")) return true;
   return url === pathname;
 }
 
-// Simulate a selected/active project for demonstration
 function getActiveProject(pathname: string) {
-  // If on a project details page, e.g. /projects/123
   if (pathname.startsWith("/projects/") && pathname !== "/projects") {
-    // Here we would fetch the name from state or route param
-    // For now, show a hard-coded example
     return "Active Project: Wolf Camera Survey";
   }
   return null;
@@ -41,6 +36,19 @@ function getActiveProject(pathname: string) {
 export function AppSidebar() {
   const location = useLocation();
   const pathname = location.pathname;
+
+  // Use local state to store sidebar item order
+  const [items, setItems] = React.useState(defaultItems);
+
+  // Drag End Handler
+  function handleDragEnd(result: DropResult) {
+    if (!result.destination) return;
+    const updated = Array.from(items);
+    const [removed] = updated.splice(result.source.index, 1);
+    updated.splice(result.destination.index, 0, removed);
+    setItems(updated);
+  }
+
   const activeProject = getActiveProject(pathname);
 
   return (
@@ -54,18 +62,35 @@ export function AppSidebar() {
                 {activeProject}
               </div>
             )}
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url, pathname)}>
-                    <a href={item.url} className="flex items-center gap-2">
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
+            {/* DragDropContext enables dragging for the entire menu */}
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="sidebar-menu">
+                {(provided) => (
+                  <SidebarMenu ref={provided.innerRef} {...provided.droppableProps}>
+                    {items.map((item, idx) => (
+                      <Draggable key={item.title} draggableId={item.title} index={idx}>
+                        {(dragProvided, dragSnapshot) => (
+                          <SidebarMenuItem
+                            ref={dragProvided.innerRef}
+                            {...dragProvided.draggableProps}
+                            {...dragProvided.dragHandleProps}
+                            className={dragSnapshot.isDragging ? "bg-sidebar-accent/60" : ""}
+                          >
+                            <SidebarMenuButton asChild isActive={isActive(item.url, pathname)}>
+                              <a href={item.url} className="flex items-center gap-2">
+                                <item.icon />
+                                <span>{item.title}</span>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </SidebarMenu>
+                )}
+              </Droppable>
+            </DragDropContext>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
