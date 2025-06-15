@@ -1,4 +1,3 @@
-
 import { Home, Camera, ListChecks, Image, ActivitySquare, FolderKanban, Layers, BrainCircuit } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
@@ -7,6 +6,7 @@ import {
 import { useLocation } from "react-router-dom";
 import React from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import ThemeToggle from "./ThemeToggle";
 
 // Default sidebar items
 const defaultItems = [
@@ -91,6 +91,8 @@ export function AppSidebar() {
                 )}
               </Droppable>
             </DragDropContext>
+            <div className="flex-grow" />
+            <ThemeToggle />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
