@@ -1,5 +1,4 @@
-
-import { Home, Camera, ListChecks, Image, ActivitySquare, FolderKanban } from "lucide-react";
+import { Home, Camera, ListChecks, Image, ActivitySquare, FolderKanban, Layers, BrainCircuit } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem
@@ -15,6 +14,8 @@ const items = [
   { title: "Media", url: "/media", icon: Image },
   { title: "Observations", url: "/observations", icon: ListChecks }, // ListChecks reused for now
   { title: "Analysis", url: "/analysis", icon: ActivitySquare }, // moved to bottom
+  { title: "Models", url: "/models", icon: Layers },
+  { title: "Training", url: "/training", icon: BrainCircuit },
 ];
 
 // Function to determine if the menu item is active
